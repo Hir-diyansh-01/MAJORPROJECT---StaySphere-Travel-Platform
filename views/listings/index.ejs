@@ -1,0 +1,118 @@
+<% layout("/layouts/boilerplate") %>
+
+<!-- ✅ Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Find Your Perfect Stay</h1>
+    <p>Discover unique homes, cabins, and experiences tailored just for you.</p>
+
+    <!-- 🔎 Search Box -->
+    <form action="/listings" method="GET" class="search-box">
+  <input type="text" name="q" placeholder="Where do you want to go?" value="<%= q || '' %>">
+
+  <% if (typeof category !== "undefined" && category) { %>
+    <input type="hidden" name="category" value="<%= category %>">
+  <% } %>
+
+  <button type="submit"><i class="fa fa-search"></i> Search</button>
+</form>
+
+  </div>
+</section>
+
+<div id="filters">
+  <a href="/listings?category=mountain<%= q ? `&q=${encodeURIComponent(q)}` : '' %>" class="filter">
+    <div><i class="fa-solid fa-mountain"></i></div>
+    <p>Mountain</p>
+  </a>
+  <a href="/listings?category=camping<%= q ? `&q=${encodeURIComponent(q)}` : '' %>" class="filter">
+    <div><i class="fa-solid fa-campground"></i></div>
+    <p>Camping</p>
+  </a>
+  <a href="/listings?category=heritage<%= q ? `&q=${encodeURIComponent(q)}` : '' %>" class="filter">
+    <div><i class="fa-solid fa-chess-rook"></i></div>
+    <p>Heritage</p>
+  </a>
+  <a href="/listings?category=city<%= q ? `&q=${encodeURIComponent(q)}` : '' %>" class="filter">
+    <div><i class="fa-solid fa-city"></i></div>
+    <p>City</p>
+  </a>
+  <a href="/listings?category=beach<%= q ? `&q=${encodeURIComponent(q)}` : '' %>" class="filter">
+    <div><i class="fa-solid fa-umbrella-beach"></i></div>
+    <p>Beach</p>
+  </a>
+  <a href="/listings?category=tent<%= q ? `&q=${encodeURIComponent(q)}` : '' %>" class="filter">
+    <div><i class="fa-solid fa-tent"></i></div>
+    <p>Tent</p>
+  </a>
+  <a href="/listings?category=winter<%= q ? `&q=${encodeURIComponent(q)}` : '' %>" class="filter">
+    <div><i class="fa-solid fa-icicles"></i></div>
+    <p>Winter</p>
+  </a>
+  <a href="/listings?category=adventure<%= q ? `&q=${encodeURIComponent(q)}` : '' %>" class="filter">
+    <div><i class="fa-solid fa-person-hiking"></i></div>
+    <p>Adventure</p>
+  </a>
+  <a href="/listings?category=domes<%= q ? `&q=${encodeURIComponent(q)}` : '' %>" class="filter">
+    <div><i class="fa-solid fa-circle-nodes"></i></div>
+    <p>Domes</p>
+  </a>
+  <a href="/listings?category=desert<%= q ? `&q=${encodeURIComponent(q)}` : '' %>" class="filter">
+    <div><i class="fa-solid fa-sun"></i></div>
+    <p>Desert</p>
+  </a>
+  <a href="/listings?category=hotel<%= q ? `&q=${encodeURIComponent(q)}` : '' %>" class="filter">
+    <div><i class="fa-solid fa-hotel"></i></div>
+    <p>Hotel</p>
+  </a>
+  <a href="/listings?category=villa<%= q ? `&q=${encodeURIComponent(q)}` : '' %>" class="filter">
+    <div><i class="fa-solid fa-house"></i></div>
+    <p>Villa</p>
+  </a>
+</div>
+
+
+
+
+<!-- ✅ Listings Grid -->
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-4 g-4">
+  <% for (let listing of allListings) { %>
+    <div class="col">
+      <a href="/listings/<%= listing._id %>" class="listing-link">
+        <div class="card listing-card shadow-sm">
+          <!-- Image -->
+          <img
+            src="<%= listing.image.url %>"
+            class="listing-img"
+            alt="listing_image"
+          />
+
+          <!-- Card Body -->
+          <div class="card-body">
+            <h5 class="listing-title"><%= listing.title %></h5>
+            <p class="listing-location"><%= listing.location %>, <%= listing.country %></p>
+            <p class="listing-price">₹<%= listing.price.toLocaleString("en-IN") %> / night</p>
+            <p class="listing-desc"><%= listing.description %></p>
+          </div>
+        </div>
+      </a>
+    </div>
+  <% } %>
+</div>
+
+<!-- ✅ Tax Info Toggle -->
+<script>
+  let taxSwitch = document.getElementById("flexSwitchCheckDefault");
+  if(taxSwitch) {
+    taxSwitch.addEventListener("click", () => {
+      let taxInfo = document.getElementsByClassName("tax-info");  
+      for (info of taxInfo) {
+        if(info.style.display !== "inline") {
+          info.style.display = "inline";
+        } else {
+          info.style.display = "none";
+        }
+      }
+    });
+  }
+</script>

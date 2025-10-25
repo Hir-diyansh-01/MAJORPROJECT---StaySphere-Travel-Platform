@@ -1,0 +1,39 @@
+<footer class="footer">
+  <div class="container">
+    <div class="row">
+      <!-- Brand / About -->
+      <div class="col-md-4 footer-brand">
+        <h3><i class="fa-solid fa-compass"></i> StaySphere</h3>
+        <p>Discover unique stays and unforgettable experiences worldwide.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-4 footer-links">
+        <h5>Quick Links</h5>
+        <ul>
+          <li><a href="/listings">Explore</a></li>
+          <li><a href="/listings/new">Host with StaySphere</a></li>
+          <% if(!currentUser) { %>
+            <li><a href="/signup">Sign Up</a></li>
+            <li><a href="/login">Log In</a></li>
+          <% } %>
+          <% if(currentUser) { %>
+            <li><a href="/logout">Log Out</a></li>
+          <% } %>
+        </ul>
+      </div>
+
+      <!-- Socials -->
+      <div class="col-md-4 footer-socials">
+        <h5>Follow Us</h5>
+        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+
+    <hr>
+    <p class="footer-bottom">© <%= new Date().getFullYear() %> StaySphere · All rights reserved.</p>
+  </div>
+</footer>

@@ -1,0 +1,128 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  body {
+    background-color: #f5f6fa;
+  }
+  .dashboard {
+    display: flex;
+    min-height: 100vh;
+  }
+  .sidebar {
+    width: 250px;
+    background: #111827;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .sidebar .menu a {
+    display: block;
+    padding: 12px 20px;
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+  .sidebar .menu a:hover,
+  .sidebar .menu a.active {
+    background: #1f2937;
+    color: #fff;
+  }
+  .main {
+    flex: 1;
+    padding: 30px;
+  }
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  .profile-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 25px;
+    text-align: center;
+  }
+  .profile-card img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+  }
+  .stat-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    text-align: center;
+  }
+</style>
+
+<div class="dashboard">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div>
+      <div class="p-4">
+        <h3 class="fw-bold">My Dashboard</h3>
+      </div>
+      <div class="menu">
+        <a href="/profile" class="active"><i class="bi bi-person"></i> Profile</a>
+        <a href="#"><i class="bi bi-bar-chart"></i> Activity</a>
+        <a href="#"><i class="bi bi-gear"></i> Settings</a>
+      </div>
+    </div>
+    <div class="p-4">
+      <a href="/logout" class="btn btn-danger w-100">Logout</a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main">
+    <div class="topbar">
+      <h2>Welcome, <%= user.name || user.username %> 👋</h2>
+      <a href="/profile/edit" class="btn btn-primary">Edit Profile</a>
+    </div>
+
+    <div class="profile-card">
+      <img src="<%= user.profilePic %>" alt="Profile Picture">
+      <h4><%= user.name || user.username %></h4>
+      <p class="text-muted mb-1"><%= user.email %></p>
+      <p class="text-muted">Joined: <%= user.createdAt ? user.createdAt.toDateString() : '—' %></p>
+    </div>
+
+    <h4 class="mt-5 mb-3">Overview</h4>
+    <div class="stats">
+      <div class="stat-card">
+        <h3>12</h3>
+        <p>Trips Booked</p>
+      </div>
+      <div class="stat-card">
+        <h3>5</h3>
+        <p>Reviews Posted</p>
+      </div>
+      <div class="stat-card">
+        <h3>3</h3>
+        <p>Wishlist Items</p>
+      </div>
+      <div class="stat-card">
+        <h3>2</h3>
+        <p>Friends Invited</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4 class="mt-5 mb-3">Recent Activity</h4>
+<div class="profile-card text-start">
+  <p><strong>Last Login:</strong> <%= user.lastLogin ? user.lastLogin.toLocaleString() : '—' %></p>
+  <p><strong>Last Updated:</strong> <%= user.lastUpdated ? user.lastUpdated.toLocaleString() : '—' %></p>
+  <p><strong>Account Created:</strong> <%= user.createdAt ? user.createdAt.toDateString() : '—' %></p>
+</div>

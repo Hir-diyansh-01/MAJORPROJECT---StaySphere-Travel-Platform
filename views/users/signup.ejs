@@ -1,0 +1,53 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="auth-wrapper d-flex align-items-center justify-content-center">
+  <div class="auth-card p-4 shadow-lg">
+    <h2 class="text-center mb-3">Create Account ✨</h2>
+    <p class="text-center text-muted mb-4">Join StaySphere and explore the world</p>
+
+    <form action="/signup" method="POST" class="needs-validation" novalidate>
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input 
+          name="username"  
+          id="username"
+          type="text" 
+          class="form-control form-control-lg"
+          placeholder="Choose a username"
+          required>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input 
+          name="email"  
+          id="email"
+          type="email" 
+          class="form-control form-control-lg"
+          placeholder="Enter your email"
+          required>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input 
+          name="password"  
+          id="password"
+          type="password" 
+          class="form-control form-control-lg"
+          placeholder="Create a password"
+          required>
+      </div>
+
+      <!-- Button -->
+      <button class="btn auth-btn w-100">Sign Up</button>
+    </form>
+
+    <p class="text-center mt-3">
+      Already have an account? <a href="/login" class="text-gradient">Login</a>
+    </p>
+  </div>
+</div>

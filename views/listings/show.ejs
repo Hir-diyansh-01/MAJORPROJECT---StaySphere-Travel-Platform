@@ -1,0 +1,164 @@
+<% layout("/layouts/boilerplate") %>
+
+<!-- Hero Section -->
+<div class="hero-image position-relative">
+  <img src="<%= listing.image.url %>" alt="<%= listing.title %>" class="w-100 hero-img">
+  <div class="hero-overlay">
+    <h1 class="hero-title"><%= listing.title %></h1>
+    <p class="hero-location"><i class="fa-solid fa-location-dot"></i> <%= listing.location %>, <%= listing.country %></p>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <div class="row">
+    <!-- Left Column (Details) -->
+    <div class="col-lg-8">
+      <div class="card shadow-sm mb-4 p-4">
+        <h4>About this stay</h4>
+        <p class="mt-3"><%= listing.description %></p>
+        <p class="fw-bold fs-5">₹<%= listing.price?.toLocaleString("en-IN") %> / night</p>
+        <p>Owned by <i><%= listing.owner?.username || "Unknown" %></i></p>
+
+        <% if (currentUser && listing.owner && listing.owner._id && String(listing.owner._id) === String(currentUser._id)) { %>
+          <div class="d-flex gap-2 mt-3">
+            <a href="/listings/<%= listing._id %>/edit" class="btn edit-btn">Edit</a>
+            <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+              <button class="btn btn-danger">Delete</button>
+            </form>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Reviews -->
+<div class="card shadow-sm p-4 mb-4">
+  <h4 class="mb-3">Guest Reviews</h4>
+  <% if (listing.reviews.length > 0) { %>
+    <% listing.reviews.forEach(r => { %>
+      <div class="card mb-3 border-0 shadow-sm review-card">
+        <div class="card-body d-flex">
+          <!-- Avatar -->
+          <div class="review-avatar me-3">
+            <span><%= r.author ? r.author.username.charAt(0).toUpperCase() : "A" %></span>
+          </div>
+
+          <!-- Review Content -->
+          <div class="w-100">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <h6 class="mb-0">@<%= r.author ? r.author.username : "Anonymous" %></h6>
+              <% if (currentUser && r.author && r.author._id && String(r.author._id) === String(currentUser._id)) { %>
+                <form method="POST" action="/listings/<%= listing._id %>/reviews/<%= r._id %>?_method=DELETE" class="ms-2">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+              <% } %>
+            </div>
+            <div class="starability-result mb-2" data-rating="<%= r.rating %>"></div>
+            <p class="mb-0"><%= r.comment %></p>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p>No reviews yet. Be the first to review!</p>
+  <% } %>
+</div>
+
+
+    <!-- Right Column (Review Form) -->
+    <div class="col-lg-4">
+      <div class="card shadow-sm p-4 sticky-top" style="top: 90px;">
+        <% if (currentUser) { %>
+          <h5 class="mb-3">Leave a Review</h5>
+          <form method="POST" action="/listings/<%= listing._id %>/reviews">
+            <div class="mb-3">
+              <textarea 
+                name="review[comment]" 
+                rows="3" 
+                class="form-control textarea-fix"
+                placeholder="Write your review..." 
+                required></textarea>
+            </div>
+
+            <!-- ⭐ Star Rating -->
+            <fieldset class="starability-slot mb-3">
+              <input type="radio" id="rating5" name="review[rating]" value="5" required />
+              <label for="rating5" title="Amazing"></label>
+
+              <input type="radio" id="rating4" name="review[rating]" value="4" />
+              <label for="rating4" title="Very good"></label>
+
+              <input type="radio" id="rating3" name="review[rating]" value="3" />
+              <label for="rating3" title="Average"></label>
+
+              <input type="radio" id="rating2" name="review[rating]" value="2" />
+              <label for="rating2" title="Not good"></label>
+
+              <input type="radio" id="rating1" name="review[rating]" value="1" />
+              <label for="rating1" title="Terrible"></label>
+            </fieldset>
+
+            <button type="submit" class="btn btn-primary w-100">Submit Review</button>
+          </form>
+        <% } else { %>
+          <p class="text-muted">Login to leave a review.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map -->
+  <div class="mt-5">
+    <h4>Where you'll be</h4>
+    <div id="map"></div>
+  </div>
+</div>
+
+<!-- Hero Styling -->
+<style>
+.hero-img {
+  height: 420px;
+  object-fit: cover;
+}
+.hero-overlay {
+  position: absolute;
+  bottom: 20px;
+  left: 30px;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+.hero-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+.hero-location {
+  font-size: 1rem;
+}
+</style>
+
+<!-- Map Script -->
+<script>
+  const mapTilerKey = "<%= maptilerKey %>";
+
+  let coords = [77.2090, 28.6139]; 
+  <% if (listing.geometry && Array.isArray(listing.geometry.coordinates) && listing.geometry.coordinates.length === 2) { %>
+    coords = <%- JSON.stringify(listing.geometry.coordinates) %>;
+  <% } %>
+
+  const map = L.map("map").setView([coords[1], coords[0]], 12);
+
+  L.tileLayer(
+    `https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${mapTilerKey}`,
+    { attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors', maxZoom: 20 }
+  ).addTo(map);
+
+  const popupContent = `
+    <div class="popup-card">
+      <img src="<%= listing.image.url %>" alt="Listing"/>
+      <h6><%= listing.title %></h6>
+      <p><i><%= listing.location %>, <%= listing.country %></i></p>
+      <p><strong>₹<%= listing.price?.toLocaleString("en-IN") %></strong></p>
+      <a href="/listings/<%= listing._id %>" class="btn btn-sm edit-btn">View Details</a>
+    </div>
+  `;
+
+  L.marker([coords[1], coords[0]]).addTo(map).bindPopup(popupContent).openPopup();
+</script>

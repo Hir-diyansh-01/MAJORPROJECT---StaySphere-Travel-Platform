@@ -1,0 +1,46 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  body {
+    background-color: #f5f6fa;
+  }
+  .edit-card {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  .edit-card img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+  }
+</style>
+
+<div class="edit-card">
+  <h2 class="mb-4 text-center">Edit Profile</h2>
+  <form action="/profile?_method=PUT" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="_method" value="PUT">
+
+    <div class="text-center mb-3">
+      <img src="<%= user.profilePic %>" alt="Profile Picture">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Full Name</label>
+      <input type="text" name="name" class="form-control" value="<%= user.name || '' %>">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Change Profile Picture</label>
+      <input type="file" name="profilePic" class="form-control">
+    </div>
+
+    <button class="btn btn-success w-100">Save Changes</button>
+    <a href="/profile" class="btn btn-link w-100 mt-2">Cancel</a>
+  </form>
+</div>
