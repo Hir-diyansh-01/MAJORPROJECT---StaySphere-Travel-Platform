@@ -8,19 +8,19 @@ const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-const ExpressError = require("../utils/ExpressError.js");
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("../models/user.js");
+const ExpressError = require("../utils/ExpressError.js");
 
 const listingRouter = require("../routes/listing.js");
 const reviewRouter = require("../routes/review.js");
 const userRouter = require("../routes/user.js");
 
 // ======================
-// 🔥 MONGODB CONNECTION (VERCEL SAFE)
+// 🔥 MONGODB CONNECTION
 // ======================
 const MONGO_URL = process.env.MONGO_URL;
 
@@ -90,19 +90,23 @@ app.use((req, res, next) => {
 // ======================
 // 🚏 ROUTES
 // ======================
-app.use("/listings/:id/reviews", reviewRouter);
-app.use("/listings", listingRouter);
+// ⚠️ Important: order matters to avoid conflicts
 app.use("/", userRouter);
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews", reviewRouter);
 
 // ======================
 // ❌ ERROR HANDLING
 // ======================
-app.all("*", (req, res, next) => {
-  next(new ExpressError(404, "Page Not Found!"));
+
+// 404 Handler
+app.use((req, res, next) => {
+  res.status(404).render("error.ejs", { message: "Page Not Found!" });
 });
 
+// Global Error Handler
 app.use((err, req, res, next) => {
-  let { statusCode = 500, message = "Something went wrong!" } = err;
+  const { statusCode = 500, message = "Something went wrong!" } = err;
   res.status(statusCode).render("error.ejs", { message });
 });
 
