@@ -1,3 +1,8 @@
+// app.js
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -7,35 +12,33 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const User = require("../models/user.js");
-const ExpressError = require("../utils/ExpressError.js");
+const User = require("./models/user.js");
+const ExpressError = require("./utils/ExpressError.js");
 
-const listingRouter = require("../routes/listing.js");
-const reviewRouter = require("../routes/review.js");
-const userRouter = require("../routes/user.js");
+// Routers
+const listingRouter = require("./routes/listing.js");
+const reviewRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
 
 // ======================
 // 🛠 APP CONFIG
 // ======================
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "../views"));
+app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
-app.use(express.static(path.join(__dirname, "../public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 // ======================
 // 🔐 SESSION & AUTH
 // ======================
 const sessionOptions = {
-  secret: "mysupersecretcode",
+  secret: process.env.SESSION_SECRET || "mysupersecretcode",
   resave: false,
   saveUninitialized: true,
-  cookie: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-    httpOnly: true,
-  },
+  cookie: { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 },
 };
 
 app.use(session(sessionOptions));
@@ -67,10 +70,12 @@ app.use("/listings/:id/reviews", reviewRouter);
 // ======================
 // ❌ ERROR HANDLING
 // ======================
+// 404 Handler
 app.use((req, res, next) => {
   res.status(404).render("error.ejs", { message: "Page Not Found!" });
 });
 
+// Global Error Handler
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Something went wrong!" } = err;
   res.status(statusCode).render("error.ejs", { message });
