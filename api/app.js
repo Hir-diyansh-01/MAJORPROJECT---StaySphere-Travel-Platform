@@ -20,9 +20,7 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-// ======================
-// 🛠 APP CONFIG
-// ======================
+// App config
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
@@ -31,17 +29,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// ======================
-// 🔐 SESSION & AUTH
-// ======================
-const sessionOptions = {
+// Session & Auth
+app.use(session({
   secret: process.env.SESSION_SECRET || "mysupersecretcode",
   resave: false,
   saveUninitialized: true,
-  cookie: { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 },
-};
-
-app.use(session(sessionOptions));
+  cookie: { httpOnly: true, maxAge: 7*24*60*60*1000 },
+}));
 app.use(flash());
 
 app.use(passport.initialize());
@@ -50,9 +44,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// ======================
-// 🌍 GLOBAL MIDDLEWARE
-// ======================
+// Global middleware
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
@@ -60,22 +52,17 @@ app.use((req, res, next) => {
   next();
 });
 
-// ======================
-// 🚏 ROUTES
-// ======================
+// Routes
 app.use("/", userRouter);
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 
-// ======================
-// ❌ ERROR HANDLING
-// ======================
-// 404 Handler
+// 404
 app.use((req, res, next) => {
   res.status(404).render("error.ejs", { message: "Page Not Found!" });
 });
 
-// Global Error Handler
+// Error handler
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Something went wrong!" } = err;
   res.status(statusCode).render("error.ejs", { message });
