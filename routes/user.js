@@ -12,6 +12,9 @@ const upload = multer({ storage });
 
 const { isLoggedIn } = require("../middleware.js");
 
+router.get("/", (req, res) => {
+  res.redirect("/listings");
+});
 
 router.route("/signup")
 .get(userController.renderSignupForm)
