@@ -90,8 +90,8 @@ app.use((req, res, next) => {
 // ======================
 // 🚏 ROUTES
 // ======================
-app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
+app.use("/listings", listingRouter);
 app.use("/", userRouter);
 
 // ======================
