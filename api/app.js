@@ -24,24 +24,24 @@ const userRouter = require("../routes/user.js");
 // ======================
 const MONGO_URL = process.env.MONGO_URL;
 
-let isConnected = false;
-mongoose.set("bufferCommands", false);
+// let isConnected = false;
+// mongoose.set("bufferCommands", false);
 
-async function connectDB() {
-  if (isConnected) return;
+// async function connectDB() {
+//   if (isConnected) return;
 
-  try {
-    await mongoose.connect(MONGO_URL, {
-      serverSelectionTimeoutMS: 30000,
-    });
-    isConnected = true;
-    console.log("🔥 MongoDB connected successfully");
-  } catch (err) {
-    console.error("❌ MongoDB connection error:", err.message);
-  }
-}
+//   try {
+//     await mongoose.connect(MONGO_URL, {
+//       serverSelectionTimeoutMS: 30000,
+//     });
+//     isConnected = true;
+//     console.log("🔥 MongoDB connected successfully");
+//   } catch (err) {
+//     console.error("❌ MongoDB connection error:", err.message);
+//   }
+// }
 
-connectDB();
+// connectDB();
 
 // ======================
 // 🛠 APP CONFIG
