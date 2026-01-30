@@ -12,22 +12,22 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const User = require("./models/user.js");
-const ExpressError = require("./utils/ExpressError.js");
+const User = require("../models/user.js");
+const ExpressError = require("../utils/ExpressError.js");
 
 // Routers
-const listingRouter = require("./routes/listing.js");
-const reviewRouter = require("./routes/review.js");
-const userRouter = require("./routes/user.js");
+const listingRouter = require("../routes/listing.js");
+const reviewRouter = require("../routes/review.js");
+const userRouter = require("../routes/user.js");
 
 // App config
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "../views"));
 app.engine("ejs", ejsMate);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../public")));
 
 // Session & Auth
 app.use(session({
